@@ -9,11 +9,15 @@ Welcome to the **Autonomous Multi-Agent Software Agency** specification. This fr
 | Role | Agent File | Workspace (write) | Experience | Primary Core Stack | Key Mission |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Tech Lead / Architect** | [`tech_lead.md`](./tech_lead.md) | `architecture/`, `contracts/`, `tasks/` | 15+ Years | System Architecture, RFCs, ERDs, Git PR review | Architecture design, task decomposition, technical roadmap, and code sign-off |
-| **UI/UX Designer** | [`ui_ux_designer.md`](./ui_ux_designer.md) | `design/` | 15+ Years | Design Systems, daisyUI Theming, Tailwind CSS | Dashboard layouts, daisyUI semantic tokens, responsive drawer shells, WCAG AA |
-| **Backend Developer** | [`backend_developer.md`](./backend_developer.md) | `backend/` | 15+ Years | Python 3.12+, FastAPI, SQLAlchemy 2, Pydantic v2 | Robust async REST APIs, DB migrations, secure business logic & services |
+| **UI/UX Designer** | [`ui_ux_designer.md`](./ui_ux_designer.md) | `design/`, `DESIGN.md` | 15+ Years | Design Systems, daisyUI Theming, Tailwind CSS | Dashboard layouts, daisyUI semantic tokens, responsive drawer shells, WCAG AA |
+| **Backend Developer** | [`backend_developer.md`](./backend_developer.md) | `backend/` | 15+ Years | Python 3.12+, FastAPI, SQLAlchemy 2, Pydantic v2, PostgreSQL 16 | Robust async REST APIs, DB migrations, secure business logic & services |
 | **Frontend Developer** | [`frontend_developer.md`](./frontend_developer.md) | `frontend/` | 15+ Years | React 19 / Vite, TypeScript 5+, Zustand, Tailwind CSS + daisyUI | Dashboard components (stats, drawer, table), daisyUI theming, Zustand state, XSS-safe code |
 | **QA Automation Engineer** | [`qa_automation_engineer.md`](./qa_automation_engineer.md) | `qa/` | 15+ Years | Pytest, Playwright, HTTPX, Black-Box Fuzzing | Automated integration tests, black-box testing, regression verification, bug rejection loop |
 | **Technical Writer** | [`technical_writer.md`](./technical_writer.md) | `docs/`, `CHANGELOG.md` | 15+ Years | Markdown, OpenAPI, Mermaid, MkDocs/Docusaurus | API references, setup runbooks, architecture decision records (ADRs), user guides |
+
+### Default Database
+
+**PostgreSQL 16** is the agency default for every project (async via SQLAlchemy 2.0 + `asyncpg`, migrations via Alembic). Development, unit tests, QA integration tests, and production all run on PostgreSQL; SQLite is not used as a substitute. Another engine is allowed only when the client explicitly requires it, and the Tech Lead must record the deviation in an ADR.
 
 ### Repository Layout & Ownership
 
@@ -25,6 +29,7 @@ Each agent **writes only inside its own workspace** and treats every other folde
 ├── architecture/             # Tech Lead   – RFC_<feature>.md
 ├── contracts/                # Tech Lead   – openapi.json (single source of truth)
 ├── tasks/                    # Tech Lead   – sprint_backlog.json
+├── DESIGN.md                 # UI/UX       – global design guideline (source of truth)
 ├── design/                   # UI/UX       – specs/, tokens/
 ├── backend/                  # Backend     – app/, alembic/, tests/unit/
 ├── frontend/                 # Frontend    – src/ (+ colocated __tests__/)
@@ -87,6 +92,7 @@ To eliminate ambiguity between agents, every role consumes and produces standard
 
 ### Handoff 2: UI/UX Designer &rarr; Frontend Developer
 - **Deliverables**:
+  - `DESIGN.md`: Global design guideline (themes, tokens, typography, spacing, components, accessibility). Baseline for every feature.
   - `design/specs/design_spec_<feature>.md`: Screen layouts, interaction states (idle, loading, error, success).
   - `design/tokens/daisyui_theme_tokens.json` & Tailwind class mappings.
   - Responsive breakpoints breakdown (`mobile`, `tablet`, `desktop`).
@@ -132,7 +138,7 @@ Each agent file has its own `Definition of Done` checklist. An agent may not han
 A feature is **Done** and releasable only when:
 - [ ] Every ticket in `tasks/sprint_backlog.json` is closed and its owner's agent-level DoD is met.
 - [ ] Every agent wrote only inside its own workspace folder.
-- [ ] Implementation matches `contracts/openapi.json` and `design/specs/design_spec_<feature>.md`.
+- [ ] Implementation matches `contracts/openapi.json`, `design/specs/design_spec_<feature>.md`, and `DESIGN.md`.
 - [ ] `qa/reports/QA_TEST_PASS_REPORT_<feature>.md` exists and shows 100% green.
 - [ ] Zero open P0/P1 defects; any open P2 explicitly accepted by the Tech Lead.
 - [ ] Tech Lead approved all PRs via the Review Checklist.

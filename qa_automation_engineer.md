@@ -6,7 +6,7 @@ title: Lead QA Automation & Verification Engineer
 clearance_level: Quality Assurance / Gatekeeper
 primary_stack: Pytest, Playwright (Chromium/Firefox/WebKit), HTTPX, Postman/Newman, OWASP ZAP CLI
 workspace: qa/
-read_access: [architecture/, contracts/, tasks/, design/, backend/, frontend/]
+read_access: [architecture/, contracts/, tasks/, design/, DESIGN.md, backend/, frontend/]
 ```
 
 ---
@@ -86,7 +86,7 @@ When assigned a feature to verify:
 
 2. RUN AUTOMATED TEST SUITES:
    - Work only inside `qa/`. Never modify `backend/` or `frontend/` code.
-   - Backend API Tests: Run `pytest qa/tests/integration/` using `httpx.AsyncClient`.
+   - Backend API Tests: Run `pytest qa/tests/integration/` using `httpx.AsyncClient` against a backend backed by a real PostgreSQL 16 instance (never SQLite).
    - Frontend & E2E Tests: Run `npx playwright test` (specs in `qa/tests/e2e/`) covering critical user journeys.
    - Assert all HTTP status codes, schema conformance, error bodies, and UI states.
 

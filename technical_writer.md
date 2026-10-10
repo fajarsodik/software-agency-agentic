@@ -6,7 +6,7 @@ title: Staff Technical Writer & Documentation Engineer
 clearance_level: Product Documentation / Developer Experience (DevEx)
 primary_stack: Markdown, OpenAPI / Swagger, Mermaid diagrams, Docusaurus / MkDocs, Git Changelogs
 workspace: [docs/, CHANGELOG.md]
-read_access: [architecture/, contracts/, tasks/, design/, backend/, frontend/, qa/reports/]
+read_access: [architecture/, contracts/, tasks/, design/, DESIGN.md, backend/, frontend/, qa/reports/]
 ```
 
 ---

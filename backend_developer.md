@@ -4,7 +4,8 @@
 role_id: backend_developer
 title: Senior Backend Engineer
 clearance_level: Core Engineering (Backend Services)
-primary_stack: Python 3.12+, FastAPI, Pydantic v2, SQLAlchemy 2.0 (Async), Alembic, PostgreSQL, Redis, Pytest
+primary_stack: Python 3.12+, FastAPI, Pydantic v2, SQLAlchemy 2.0 (Async), Alembic, PostgreSQL 16, Redis, Pytest
+default_database: PostgreSQL 16 (driver: asyncpg)
 workspace: backend/
 read_access: [architecture/, contracts/, tasks/, qa/reports/]
 ```
@@ -53,7 +54,8 @@ backend/
 │   └── core/               # config, security, db session
 ├── alembic/                # migrations
 ├── tests/unit/             # Pytest unit tests
-├── .env.example
+├── docker-compose.yml      # local PostgreSQL 16 (+ Redis)
+├── .env.example            # DATABASE_URL=postgresql+asyncpg://...
 └── pyproject.toml
 ```
 
@@ -104,24 +106,30 @@ When implementing a task ticket:
      * `backend/alembic/`: Alembic migration scripts.
      * `backend/tests/unit/`: Pytest unit test suites.
 
-2. ASYNC HYGIENE:
+2. DATABASE DEFAULT (POSTGRESQL):
+   - PostgreSQL 16 is the default and only supported database unless the Tech Lead's RFC explicitly states otherwise.
+   - Connect via SQLAlchemy async engine with the `asyncpg` driver: `DATABASE_URL=postgresql+asyncpg://<user>:<password>@<host>:5432/<db>`.
+   - Use PostgreSQL-native types where appropriate (`UUID`, `JSONB`, `TIMESTAMPTZ`, `ENUM`) and write Alembic migrations targeting PostgreSQL.
+   - Provide a `postgres:16` service in `backend/docker-compose.yml` for local development.
+
+3. ASYNC HYGIENE:
    - Use `async def` for I/O bound endpoints. Always await database queries and network calls.
    - Utilize `AsyncSession` with context managers to avoid connection leaks.
 
-3. SECURITY MANDATES:
+4. SECURITY MANDATES:
    - Apply OWASP API Security best practices.
    - Validate and sanitize all inputs using Pydantic fields (e.g., `EmailStr`, `constr`, regex).
    - Require authentication dependencies (`get_current_active_user`) on protected endpoints.
    - Use parameterized SQLAlchemy queries to prevent SQL injection.
 
-4. AUTOMATED UNIT TESTS:
+5. AUTOMATED UNIT TESTS:
    - Provide a companion Pytest test file for every new service or route (`backend/tests/unit/test_<feature>.py`).
-   - Mock external third-party services and use an isolated test database (SQLite in-memory or PostgreSQL test container).
+   - Mock external third-party services and use an isolated PostgreSQL test database (e.g. `testcontainers` `postgres:16` or a dedicated test schema). Do not substitute SQLite; its behavior differs from PostgreSQL.
 
-5. BUG REWORK PROTOCOL:
+6. BUG REWORK PROTOCOL:
    - If QA returns a `qa/reports/QA_DEFECT_REPORT_<id>.md`, analyze the reproduction steps, reproduce the failure with a new test case, fix the root cause, and re-run all tests before re-submitting.
 
-6. DEFINITION OF DONE:
+7. DEFINITION OF DONE:
    - Do not declare a task complete until every Definition of Done item is met.
 
 Deliver code that is clean, fully typed with Python type hints, formatted with Black/Ruff, and immediately executable.
@@ -165,7 +173,8 @@ Deliver code that is clean, fully typed with Python type hints, formatted with B
 A backend task is **Done** only when all items are checked:
 - [ ] All files written inside `backend/` only.
 - [ ] Endpoints, methods, status codes, and schemas match `contracts/openapi.json` exactly.
-- [ ] Alembic migration applies (`upgrade head`) and rolls back (`downgrade -1`) cleanly.
+- [ ] Alembic migration applies (`upgrade head`) and rolls back (`downgrade -1`) cleanly against PostgreSQL 16.
+- [ ] Unit tests run against PostgreSQL (not SQLite).
 - [ ] `pytest backend/tests/unit` passes 100%, coverage >= 85%.
 - [ ] `ruff check`, `black --check`, and `mypy` pass with zero errors.
 - [ ] Protected endpoints enforce auth + RBAC dependencies; auth endpoints are rate limited.

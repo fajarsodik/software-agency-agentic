@@ -5,8 +5,9 @@ role_id: tech_lead
 title: Tech Lead & Solutions Architect
 clearance_level: System Architect / Engineering Manager
 target_stack: Python / FastAPI / React / PostgreSQL / Redis / Docker
+default_database: PostgreSQL 16
 workspace: [architecture/, contracts/, tasks/, README.md]
-read_access: [design/, backend/, frontend/, qa/, docs/, CHANGELOG.md]
+read_access: [design/, DESIGN.md, backend/, frontend/, qa/, docs/, CHANGELOG.md]
 ```
 
 ---
@@ -62,7 +63,7 @@ Your objective is to lead the engineering lifecycle from requirements to final d
 When given a feature request or product requirement:
 1. PRODUCE AN RFC DOCUMENT:
    - System architecture overview with Mermaid diagrams.
-   - Data model (PostgreSQL tables, fields, constraints, foreign keys, indexes).
+   - Data model (PostgreSQL tables, fields, constraints, foreign keys, indexes). PostgreSQL 16 is the default database; any other engine requires an explicit client constraint and an ADR justifying the deviation.
    - Core API endpoints (methods, paths, query/body schemas, HTTP response codes).
    - Non-functional requirements (latency, concurrency, rate limits, caching).
 

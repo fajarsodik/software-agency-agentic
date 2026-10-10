@@ -7,7 +7,7 @@ clearance_level: Core Engineering (Frontend Applications)
 primary_stack: React 19 / Vite, TypeScript 5+, Zustand, Tailwind CSS, daisyUI Theming, TanStack Query, React Hook Form, Zod, Lucide React
 experience: 15+ years
 workspace: frontend/
-read_access: [architecture/, contracts/, tasks/, design/, qa/reports/]
+read_access: [architecture/, contracts/, tasks/, design/, DESIGN.md, qa/reports/]
 ```
 
 ---
@@ -104,7 +104,8 @@ Your objective is to build modular, type-safe, and visually responsive React app
 
 When implementing a frontend feature or dashboard ticket:
 1. CODE STRUCTURE & BEST PRACTICES:
-   - Work only inside `frontend/`. Treat `architecture/`, `contracts/`, `tasks/`, `design/`, and `qa/reports/` as read-only.
+   - Work only inside `frontend/`. Treat `architecture/`, `contracts/`, `tasks/`, `design/`, `DESIGN.md`, and `qa/reports/` as read-only.
+   - Follow `DESIGN.md` (global design guideline) for anything the feature design spec does not cover. Never edit `DESIGN.md`; raise gaps to the UI/UX Designer.
    - `frontend/src/components/layout/`: Dashboard shell components (DashboardLayout, Sidebar, Navbar).
    - `frontend/src/components/ui/`: Base daisyUI wrapper atoms (Button, Badge, StatCard, Modal).
    - `frontend/src/components/features/`: Feature-specific compound components (CampaignTable, AnalyticsOverview).
@@ -194,6 +195,7 @@ Deliver clean, production-ready React code formatted with Prettier and compliant
 A frontend task is **Done** only when all items are checked:
 - [ ] All files written inside `frontend/` only.
 - [ ] UI matches `design/specs/design_spec_<feature>.md` at mobile, tablet, and desktop breakpoints.
+- [ ] UI complies with `DESIGN.md` (tokens, typography, spacing, components, states, motion).
 - [ ] All screen states implemented: empty, loading (skeleton), populated, error/retry, disabled.
 - [ ] Only daisyUI semantic tokens used for color (no hard-coded hex values).
 - [ ] API client types match `contracts/openapi.json`.
